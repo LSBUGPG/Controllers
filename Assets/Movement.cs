@@ -1,17 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Users;
 
 public class Movement : MonoBehaviour
 {
-    void Update()
+    public PlayerInput input;
+    public Controller controller;
+    Vector2 direction;
+
+    void Start()
     {
+        InputUser user = input.user;
+        user.UnpairDevices();
+        InputUser.PerformPairingWithDevice(controller.device, user);
     }
 
-    public void OnMove(InputContext input)
+    void Update()
     {
-        Vector2 move = input.GetValue<Vector2>();
-        Debug.Log($"Move {move}");
+        transform.Translate(direction * Time.deltaTime);
+    }
+
+    public void OnMove(InputValue value)
+    {
+        direction = value.Get<Vector2>();
     }
 }
